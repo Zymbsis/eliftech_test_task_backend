@@ -21,6 +21,7 @@ export const startServer = () => {
       message: 'Hello world!',
     });
   });
+
   app.get('/events', getEventsController);
 
   app.use('*', (req, res, next) => {
