@@ -16,6 +16,7 @@ const participantsSchema = new Schema(
     },
     infoSource: {
       type: String,
+      enum: ['Social media', 'Friends', 'Found myself'],
       required: false,
     },
   },

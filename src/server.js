@@ -2,7 +2,14 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import { PORT } from './constants/env.js';
-import { getEventsController } from './controllers/events.js';
+import {
+  addParticipantController,
+  getEventByIdController,
+  getEventsController,
+} from './controllers/events.js';
+import { ctrlWrapper } from './middlewares/ctrlWrapper.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { isValidId } from './middlewares/isValid.js';
 
 const app = express();
 
@@ -22,7 +29,13 @@ export const startServer = () => {
     });
   });
 
-  app.get('/events', getEventsController);
+  app.get('/events', ctrlWrapper(getEventsController));
+  app.get('/events/:eventId', isValidId, ctrlWrapper(getEventByIdController));
+  app.patch(
+    '/events/:eventId',
+    isValidId,
+    ctrlWrapper(addParticipantController),
+  );
 
   app.use('*', (req, res, next) => {
     res.status(404).json({
@@ -30,12 +43,7 @@ export const startServer = () => {
     });
   });
 
-  app.use((err, req, res, next) => {
-    res.status(500).json({
-      message: 'Something went wrong',
-      error: err.message,
-    });
-  });
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${Number(PORT)}`);

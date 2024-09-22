@@ -1,19 +1,41 @@
-import { getAllEvents } from '../services/events.js';
+import {
+  addParticipant,
+  getAllEvents,
+  getEventById,
+} from '../services/events.js';
 import { parsePaginationParams } from '../utils/pagination.js';
 
-export const getEventsController = async (req, res, next) => {
+export const getEventsController = async (req, res) => {
   const { query } = req;
   const { page, perPage } = parsePaginationParams(query);
+  const events = await getAllEvents({ page, perPage });
 
-  try {
-    const events = await getAllEvents({ page, perPage });
+  res.json({
+    status: 200,
+    message: 'Successfully found events!',
+    data: events,
+  });
+};
 
-    res.json({
-      status: 200,
-      message: 'Successfully found events!',
-      data: events,
-    });
-  } catch (error) {
-    next(error);
-  }
+export const getEventByIdController = async (req, res) => {
+  const { eventId } = req.params;
+  const event = await getEventById(eventId);
+
+  res.json({
+    status: 200,
+    message: 'Successfully found event!',
+    data: event,
+  });
+};
+
+export const addParticipantController = async (req, res) => {
+  const { eventId } = req.params;
+  const payload = req.body;
+  const participant = await addParticipant(eventId, payload);
+
+  res.json({
+    status: 200,
+    message: `Successfully added a participant!`,
+    data: participant,
+  });
 };
