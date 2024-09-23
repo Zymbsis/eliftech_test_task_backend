@@ -18,5 +18,10 @@ export const addParticipantSchema = Joi.object({
     'string.max': 'dateOfBirth should have at most {#limit} characters',
     'any.required': 'dateOfBirth is required',
   }),
-  infoSource: Joi.string().valid('Social media', 'Friends', 'Found myself'),
+  infoSource: Joi.string().valid(
+    'Social media',
+    'Friends',
+    'Found myself',
+    null,
+  ),
 });
