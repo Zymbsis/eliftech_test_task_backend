@@ -4,11 +4,13 @@ import {
   getEventById,
 } from '../services/events.js';
 import { parsePaginationParams } from '../utils/pagination.js';
+import { parseSortParams } from '../utils/sort.js';
 
 export const getEventsController = async (req, res) => {
   const { query } = req;
   const { page, perPage } = parsePaginationParams(query);
-  const events = await getAllEvents({ page, perPage });
+  const { sortOrder, sortBy } = parseSortParams(query);
+  const events = await getAllEvents({ page, perPage, sortOrder, sortBy });
 
   res.json({
     status: 200,
