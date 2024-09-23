@@ -10,6 +10,8 @@ import {
 import { ctrlWrapper } from './middlewares/ctrlWrapper.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { isValidId } from './middlewares/isValid.js';
+import { validateBody } from './middlewares/validateBody.js';
+import { addParticipantSchema } from './validation/events.js';
 
 const app = express();
 
@@ -34,6 +36,7 @@ export const startServer = () => {
   app.patch(
     '/events/:eventId',
     isValidId,
+    validateBody(addParticipantSchema),
     ctrlWrapper(addParticipantController),
   );
 
